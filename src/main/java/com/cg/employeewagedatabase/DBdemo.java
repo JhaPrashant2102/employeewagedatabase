@@ -27,9 +27,9 @@ public class DBdemo {
 
 		// Connecting to database
 		try {
-			System.out.println("Connecting to database:        " + jdbcURL);
+			System.out.println("Connecting to database:      " + jdbcURL);
 			connection = DriverManager.getConnection(jdbcURL,userName,password);
-			System.out.println("Connection is successful!!!    "+connection);
+			System.out.println("Connection is successful!!!  "+connection);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,7 +39,7 @@ public class DBdemo {
 		Enumeration<Driver> driverList = DriverManager.getDrivers();
 		while (driverList.hasMoreElements()) {
 			Driver driverClass = driverList.nextElement();
-			System.out.println("Drivers are :                  " + driverClass.getClass().getName());
+			System.out.println("Drivers are :                " + driverClass.getClass().getName());
 		}
 	}
 }
