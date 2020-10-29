@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeePayrollDB_IOService {
+	enum StatementType {
+		PREPARED_STATEMENT, STATEMENT;
+	}
 
 	private PreparedStatement employeePayrollDataStatement;
 	private static EmployeePayrollDB_IOService employeePayrollDB_IOService;
@@ -53,9 +56,16 @@ public class EmployeePayrollDB_IOService {
 
 	}
 
-	public int updateEmployeeData(String name, double salary) {
-		// return this.updateEmployeeDataUsingPreparedStatement(name, salary);
-		return this.updateEmployeeDataUsingStatement(name, salary);
+	public int updateEmployeeData(String name, double salary, StatementType type) {
+		switch (type) {
+		case PREPARED_STATEMENT:
+			return this.updateEmployeeDataUsingPreparedStatement(name, salary);
+		case STATEMENT:
+			return this.updateEmployeeDataUsingStatement(name, salary);
+		default:
+			return 0;
+		}
+
 	}
 
 	private int updateEmployeeDataUsingStatement(String name, double salary) {
@@ -70,7 +80,33 @@ public class EmployeePayrollDB_IOService {
 	}
 
 	private int updateEmployeeDataUsingPreparedStatement(String name, double salary) {
-		// TODO Auto-generated method stub
+		Connection connection = null;
+		PreparedStatement pStmt = null;
+		try {
+			connection = this.getConnection();
+			String sql = "update employee_payroll_2 set salary = ? where name = ?;";
+			pStmt = connection.prepareStatement(sql);
+			pStmt.setDouble(1, salary);
+			pStmt.setString(2, name);
+			return pStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pStmt!=null) {
+				try {
+					pStmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		return 0;
 	}
 

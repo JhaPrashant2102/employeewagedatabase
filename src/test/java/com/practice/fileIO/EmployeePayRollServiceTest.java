@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 
+import com.practice.fileIO.EmployeePayrollDB_IOService.StatementType;
 import com.practice.fileIO.EmployeePayrollService.IOService;
 
 
@@ -44,11 +45,19 @@ public class EmployeePayRollServiceTest {
 	public void givenNewSalaryForEmployeeWhenUpdatedShouldSyncWithDB() {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
-		employeePayrollService.updateEmployeeSalary("Terisa",4000000.00);
+		employeePayrollService.updateEmployeeSalary("Terisa",4000000.00,StatementType.STATEMENT);
 		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
 		assertTrue(result);
 	}
 	
-	
+	//UC4
+	@Test
+	public void givenNewSalaryForEmployeeWhenUpdatedShouldSyncWithDBUsingPreparedStatement() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
+		employeePayrollService.updateEmployeeSalary("Terisa",4000000.00,StatementType.PREPARED_STATEMENT);
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
+		assertTrue(result);
+	}
 
 }

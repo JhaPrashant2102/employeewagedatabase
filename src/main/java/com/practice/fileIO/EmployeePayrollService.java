@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.practice.fileIO.EmployeePayrollDB_IOService.StatementType;
+
 public class EmployeePayrollService {
 	// to specify which IO we'll be using
 	// we'll be implementing function in other class associated with these IO stream
@@ -76,9 +78,9 @@ public class EmployeePayrollService {
 		return null;
 	}
 
-	public void updateEmployeeSalary(String name, double salary) {
+	public void updateEmployeeSalary(String name, double salary,StatementType type) {
 		//check above
-		int result = employeePayrollDB_IOService.updateEmployeeData(name, salary);
+		int result = employeePayrollDB_IOService.updateEmployeeData(name, salary,type);
 		if (result == 0)
 			return;
 		EmployeePayRollData employeePayRollData = this.getEmployeePayRollData(name);
