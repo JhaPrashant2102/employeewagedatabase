@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 
 import com.practice.fileIO.EmployeePayrollDB_IOService.StatementType;
@@ -72,11 +74,16 @@ public class EmployeePayRollServiceTest {
 	}
 	
 	//UC6
+	@Test
 	public void givenPayrollDataWhenAverageSalaryRetrievedByGenderShouldReturnProperValue() {
-		
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
+		Map<String,Double> averageSalaryByGender = employeePayrollService.readAverageSalaryByGender(IOService.DB_IO);
+		assertTrue(averageSalaryByGender.get("M").equals(2000000.00)&&averageSalaryByGender.get("F").equals(4000000.00));
 	}
 	
 	//UC7
+	@Test
 	public void givenNewEmployeeWhenAddedShouldSyncWithDB() {
 		
 	}

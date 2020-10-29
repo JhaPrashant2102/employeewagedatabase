@@ -2,6 +2,7 @@ package com.practice.fileIO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.practice.fileIO.EmployeePayrollDB_IOService.StatementType;
@@ -107,6 +108,12 @@ public class EmployeePayrollService {
 	public boolean checkEmployeePayrollInSyncWithDB(String name) {
 		List<EmployeePayRollData> checkList = employeePayrollDB_IOService.getEmployeePayrollData(name);
 		return checkList.get(0).equals(getEmployeePayRollData(name));
+	}
+
+	public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO))
+			return employeePayrollDB_IOService.getAverageSalaryByGender();
+		return null;
 	}
 
 }

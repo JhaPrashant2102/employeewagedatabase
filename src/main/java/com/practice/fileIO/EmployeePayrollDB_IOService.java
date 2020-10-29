@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollDB_IOService {
 	enum StatementType {
@@ -92,6 +94,22 @@ public class EmployeePayrollDB_IOService {
 		return 0;
 	}
 
+	public Map<String, Double> getAverageSalaryByGender() {
+		String sql = "select gender, avg(salary) as avg_salary from employee_payroll_2 group by gender;";
+		Map<String,Double> avgSalaryMap = new HashMap<>();
+		try(Connection connection = this.getConnection()){
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while(resultSet.next()) {
+				String gender = resultSet.getString("gender");
+				Double salary = resultSet.getDouble("avg_salary");
+				avgSalaryMap.put(gender, salary);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return avgSalaryMap;
+	}
 	public List<EmployeePayRollData> getEmployeePayrollData(String name) {
 		List<EmployeePayRollData> employeePayRollList = null;
 		if (this.employeePayrollDataStatement == null) {
@@ -134,16 +152,16 @@ public class EmployeePayrollDB_IOService {
 	}
 
 	public List<EmployeePayRollData> getEmployeeListInRange(String date1, String date2) {
-		String sql = String.format("select * from employee_payroll_2 where start between '%s' and '%s';",date1, date2);
+		String sql = String.format("select * from employee_payroll_2 where start between '%s' and '%s';", date1, date2);
 		List<EmployeePayRollData> employeePayrollList = new ArrayList<>();
-		try(Connection connection = this.getConnection()){
+		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			employeePayrollList = getEmployeePayrollData(resultSet);
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return employeePayrollList;
 	}
 
