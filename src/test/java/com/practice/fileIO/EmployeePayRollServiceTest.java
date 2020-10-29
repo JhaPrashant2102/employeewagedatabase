@@ -42,6 +42,7 @@ public class EmployeePayRollServiceTest {
 	}
 	
 	//UC3
+	@Test
 	public void givenNewSalaryForEmployeeWhenUpdatedShouldSyncWithDB() {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
@@ -60,4 +61,23 @@ public class EmployeePayRollServiceTest {
 		assertTrue(result);
 	}
 
+	//UC5
+	@Test
+	public void givenDateRangeWhenRetrievedShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
+		List<EmployeePayRollData> employeePayRollList = employeePayrollService.getEmployeeListInStartDateRange("2010-01-01","2020-12-12",IOService.DB_IO);
+		 System.out.println(employeePayRollList.size());
+		assertEquals(3, employeePayRollList.size());
+	}
+	
+	//UC6
+	public void givenPayrollDataWhenAverageSalaryRetrievedByGenderShouldReturnProperValue() {
+		
+	}
+	
+	//UC7
+	public void givenNewEmployeeWhenAddedShouldSyncWithDB() {
+		
+	}
 }

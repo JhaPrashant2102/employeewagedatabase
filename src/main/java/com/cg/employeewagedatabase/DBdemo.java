@@ -11,7 +11,7 @@ public class DBdemo {
 		String userName = "root";
 		String password = "root";
 
-		// sql connection that i am establishing
+		//sql connection that i am establishing
 		Connection connection;
 
 		// check whether driver is registered

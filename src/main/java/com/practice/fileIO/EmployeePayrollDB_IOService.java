@@ -80,32 +80,14 @@ public class EmployeePayrollDB_IOService {
 	}
 
 	private int updateEmployeeDataUsingPreparedStatement(String name, double salary) {
-		Connection connection = null;
-		PreparedStatement pStmt = null;
-		try {
-			connection = this.getConnection();
+		try (Connection connection = this.getConnection()) {
 			String sql = "update employee_payroll_2 set salary = ? where name = ?;";
-			pStmt = connection.prepareStatement(sql);
-			pStmt.setDouble(1, salary);
-			pStmt.setString(2, name);
-			return pStmt.executeUpdate();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setDouble(1, salary);
+			preparedStatement.setString(2, name);
+			return preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (pStmt!=null) {
-				try {
-					pStmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 		return 0;
 	}
@@ -149,6 +131,20 @@ public class EmployeePayrollDB_IOService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<EmployeePayRollData> getEmployeeListInRange(String date1, String date2) {
+		String sql = String.format("select * from employee_payroll_2 where start between '%s' and '%s';",date1, date2);
+		List<EmployeePayRollData> employeePayrollList = new ArrayList<>();
+		try(Connection connection = this.getConnection()){
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			employeePayrollList = getEmployeePayrollData(resultSet);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return employeePayrollList;
 	}
 
 }

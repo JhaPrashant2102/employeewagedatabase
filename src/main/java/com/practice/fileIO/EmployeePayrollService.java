@@ -12,6 +12,7 @@ public class EmployeePayrollService {
 	public enum IOService {
 		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
 	}
+
 	private EmployeePayrollDB_IOService employeePayrollDB_IOService;
 	private List<EmployeePayRollData> employeePayRollList;
 
@@ -72,15 +73,22 @@ public class EmployeePayrollService {
 			return employeePayRollList;
 		}
 		if (ioService.equals(IOService.DB_IO)) {
-			employeePayRollList =employeePayrollDB_IOService.readData();
+			employeePayRollList = employeePayrollDB_IOService.readData();
 			return employeePayRollList;
 		}
 		return null;
 	}
 
-	public void updateEmployeeSalary(String name, double salary,StatementType type) {
-		//check above
-		int result = employeePayrollDB_IOService.updateEmployeeData(name, salary,type);
+	public List<EmployeePayRollData> getEmployeeListInStartDateRange(String date1, String date2, IOService ioService) {
+		if (ioService.equals(IOService.DB_IO)) {
+			return employeePayrollDB_IOService.getEmployeeListInRange(date1,date2);
+		}
+		return null;
+	}
+
+	public void updateEmployeeSalary(String name, double salary, StatementType type) {
+		// check above
+		int result = employeePayrollDB_IOService.updateEmployeeData(name, salary, type);
 		if (result == 0)
 			return;
 		EmployeePayRollData employeePayRollData = this.getEmployeePayRollData(name);
