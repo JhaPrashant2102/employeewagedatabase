@@ -1,6 +1,7 @@
 package com.practice.fileIO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -96,20 +97,21 @@ public class EmployeePayrollDB_IOService {
 
 	public Map<String, Double> getAverageSalaryByGender() {
 		String sql = "select gender, avg(salary) as avg_salary from employee_payroll_2 group by gender;";
-		Map<String,Double> avgSalaryMap = new HashMap<>();
-		try(Connection connection = this.getConnection()){
+		Map<String, Double> avgSalaryMap = new HashMap<>();
+		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				String gender = resultSet.getString("gender");
 				Double salary = resultSet.getDouble("avg_salary");
 				avgSalaryMap.put(gender, salary);
 			}
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return avgSalaryMap;
 	}
+
 	public List<EmployeePayRollData> getEmployeePayrollData(String name) {
 		List<EmployeePayRollData> employeePayRollList = null;
 		if (this.employeePayrollDataStatement == null) {
@@ -128,13 +130,17 @@ public class EmployeePayrollDB_IOService {
 	private List<EmployeePayRollData> getEmployeePayrollData(ResultSet resultSet) {
 		List<EmployeePayRollData> employeePayrollList = new ArrayList<>();
 		try {
-			while (resultSet.next()) {
+			do
+			{
+				
 				int id = resultSet.getInt("id");
 				String name = resultSet.getString("name");
 				double salary = resultSet.getDouble("salary");
 				LocalDate startDate = resultSet.getDate("start").toLocalDate();
 				employeePayrollList.add(new EmployeePayRollData(id, name, salary, startDate));
+				
 			}
+			while (resultSet.next());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -163,6 +169,26 @@ public class EmployeePayrollDB_IOService {
 		}
 
 		return employeePayrollList;
+	}
+
+	public EmployeePayRollData addEmployeeToPayroll(String name, double salary, LocalDate startDate,String gender) {
+		int employeeId = -1;
+		EmployeePayRollData employeePayRollData = null;
+		String sql = String.format("insert into employee_payroll_2 (name,gender,salary,start) values ('%s','%s','%s','%s')", name, gender,
+				salary, Date.valueOf(startDate));
+		try(Connection connection = this.getConnection()){
+			Statement statement = connection.createStatement();
+			int rowAffected = statement.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+			if(rowAffected==1){
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if(resultSet.next())
+					employeeId = resultSet.getInt(1);
+			}
+			employeePayRollData = new EmployeePayRollData(employeeId,name,salary,startDate);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return employeePayRollData;
 	}
 
 }

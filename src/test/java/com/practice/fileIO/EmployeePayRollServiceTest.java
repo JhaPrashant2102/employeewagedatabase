@@ -2,6 +2,7 @@ package com.practice.fileIO;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class EmployeePayRollServiceTest {
 	
 	//UC3
 	@Test
-	public void givenNewSalaryForEmployeeWhenUpdatedShouldSyncWithDB() {
+	public void givenNewSalaryForEmployeeWhenUpdatedShouldSyncWithDBUsingStatement() {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
 		employeePayrollService.updateEmployeeSalary("Terisa",4000000.00,StatementType.STATEMENT);
@@ -79,12 +80,16 @@ public class EmployeePayRollServiceTest {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
 		Map<String,Double> averageSalaryByGender = employeePayrollService.readAverageSalaryByGender(IOService.DB_IO);
-		assertTrue(averageSalaryByGender.get("M").equals(2000000.00)&&averageSalaryByGender.get("F").equals(4000000.00));
+		assertTrue(averageSalaryByGender.get("M").equals(3000000.00)&&averageSalaryByGender.get("F").equals(4000000.00));
 	}
 	
 	//UC7
 	@Test
 	public void givenNewEmployeeWhenAddedShouldSyncWithDB() {
-		
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
+		employeePayrollService.addEmployeeToPayroll("Mark",5000000.00,LocalDate.now(),"M");
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+		assertTrue(result);
 	}
 }
