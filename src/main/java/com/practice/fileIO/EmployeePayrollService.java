@@ -97,7 +97,7 @@ public class EmployeePayrollService {
 
 	public void addEmployeesToPayrollWithThreads(List<EmployeePayRollData> payrollList) {
 		//needed for thread complete execution check
-		Map<Integer,Boolean> employeeAdditionStatus = new HashMap<>();
+		Map<Integer,Boolean> employeeAdditionStatus = new HashMap<Integer,Boolean>();
 		payrollList.forEach(employeePayrollData->{
 			Runnable task = ()->{
 				employeeAdditionStatus.put(employeePayrollData.hashCode(),false);
@@ -118,7 +118,7 @@ public class EmployeePayrollService {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(this.employeePayRollList);
+		System.out.println(payrollList);
 	}
 
 	public List<EmployeePayRollData> getEmployeeListInStartDateRange(String date1, String date2, IOService ioService) {
