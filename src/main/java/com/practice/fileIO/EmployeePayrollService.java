@@ -2,6 +2,7 @@ package com.practice.fileIO;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -60,6 +61,9 @@ public class EmployeePayrollService {
 		if (ioService.equals(IOService.FILE_IO)) {
 			new EmployeePayrollFileIOService().printData();
 		}
+		if(ioService.equals(IOService.DB_IO)) {
+			System.out.println(this.employeePayRollList);
+		}
 	}
 
 	public long countEntries(IOService ioService) {
@@ -91,8 +95,30 @@ public class EmployeePayrollService {
 		System.out.println(this.employeePayRollList);
 	}
 
-	public void addEmployeesToPayrollWithThreads(List<EmployeePayRollData> asList) {
-		
+	public void addEmployeesToPayrollWithThreads(List<EmployeePayRollData> payrollList) {
+		//needed for thread complete execution check
+		Map<Integer,Boolean> employeeAdditionStatus = new HashMap<>();
+		payrollList.forEach(employeePayrollData->{
+			Runnable task = ()->{
+				employeeAdditionStatus.put(employeePayrollData.hashCode(),false);
+				System.out.println("Employee being added : "+Thread.currentThread().getName());
+				this.addEmployeeToPayroll(employeePayrollData.getName(), employeePayrollData.getSalary(),
+						employeePayrollData.getStartDate(), employeePayrollData.getGender());
+				employeeAdditionStatus.put(employeePayrollData.hashCode(),true);
+				System.out.println("Employee Added: "+Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task,employeePayrollData.getName());
+			thread.start();
+		});
+		//while loop is needed to check whether the thread gets completed or not
+		while(employeeAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			}catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println(this.employeePayRollList);
 	}
 
 	public List<EmployeePayRollData> getEmployeeListInStartDateRange(String date1, String date2, IOService ioService) {

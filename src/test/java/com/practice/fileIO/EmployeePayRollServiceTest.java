@@ -116,4 +116,29 @@ public class EmployeePayRollServiceTest {
 		System.out.println("Duration without Thread: "+Duration.between(start, end));
 		assertEquals(7, employeePayrollService.countEntries(IOService.DB_IO));
 	}
+	
+	//UC2-multithreading
+	@Test
+	public void given6Employees_WhenAddedToDBUsingThreads_ShouldMatchEmployeeEntries() {
+		EmployeePayRollData[] arrayOfEmps = {
+			new EmployeePayRollData(0, "Jeff Bezos","M",100000.0, LocalDate.now()),
+			new EmployeePayRollData(0, "Bill Gates","M",200000.0, LocalDate.now()),
+			new EmployeePayRollData(0, "Mark Zuckerberg","M",300000.0, LocalDate.now()),
+			new EmployeePayRollData(0, "Sundar","M",600000.0, LocalDate.now()),
+			new EmployeePayRollData(0, "Mukesh","M",100000.0, LocalDate.now()),
+			new EmployeePayRollData(0, "Anil","M",200000.0, LocalDate.now()),
+		};
+		
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readData(IOService.DB_IO);
+		Instant start = Instant.now();
+		employeePayrollService.addEmployeesToPayroll(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without Thread: "+Duration.between(start, end));
+		Instant threadStart = Instant.now();
+		employeePayrollService.addEmployeesToPayrollWithThreads(Arrays.asList(arrayOfEmps));
+		Instant threadend = Instant.now();
+		System.out.println("Duration With Thread: "+Duration.between(threadStart, threadend));
+		assertEquals(13, employeePayrollService.countEntries(IOService.DB_IO));
+	}
 }
