@@ -80,7 +80,7 @@ public class EmployeePayRollServiceTest {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayRollData> employeePayRollData = employeePayrollService.readData(IOService.DB_IO);
 		Map<String,Double> averageSalaryByGender = employeePayrollService.readAverageSalaryByGender(IOService.DB_IO);
-		assertTrue(averageSalaryByGender.get("M").equals(3000000.00)&&averageSalaryByGender.get("F").equals(4000000.00));
+		assertTrue(averageSalaryByGender.get("M").equals(2000000.00)&&averageSalaryByGender.get("F").equals(4000000.00));
 	}
 	
 	//UC7
