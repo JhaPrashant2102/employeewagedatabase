@@ -7,6 +7,7 @@ public class EmployeePayRollData {
 	private String name;
 	private double salary;
 	private LocalDate startDate;
+	private String gender;
 
 	public EmployeePayRollData(int id, String name, double salary) {
 		this.id = id;
@@ -14,9 +15,14 @@ public class EmployeePayRollData {
 		this.salary = salary;
 	}
 
-	public EmployeePayRollData(int id, String name, double salary,LocalDate startDate) {
-		this(id,name,salary);
+	public EmployeePayRollData(int id, String name, double salary, LocalDate startDate) {
+		this(id, name, salary);
 		this.startDate = startDate;
+	}
+
+	public EmployeePayRollData(int id, String name, String gender, double salary, LocalDate startDate) {
+		this(id, name, salary, startDate);
+		this.setGender(gender);
 	}
 
 	public int getId() {
@@ -25,6 +31,14 @@ public class EmployeePayRollData {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
 	public String getName() {
@@ -44,7 +58,7 @@ public class EmployeePayRollData {
 	}
 
 	public String toString() {
-		return "id ="+this.getId()+",name ="+this.getName()+",salary ="+this.getSalary();
+		return "id =" + this.getId() + ",name =" + this.getName() + ",salary =" + this.getSalary();
 	}
 
 	@Override
@@ -69,6 +83,14 @@ public class EmployeePayRollData {
 		if (getClass() != obj.getClass())
 			return false;
 		EmployeePayRollData that = (EmployeePayRollData) obj;
-		return id == that.id && Double.compare(that.salary, salary) ==0 && name.equals(that.name);
+		return id == that.id && Double.compare(that.salary, salary) == 0 && name.equals(that.name);
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 }

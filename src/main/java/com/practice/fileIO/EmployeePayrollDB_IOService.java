@@ -224,7 +224,7 @@ public class EmployeePayrollDB_IOService {
 			double tax = taxablePay * 0.1;
 			double netPay = salary - tax;
 			String sql = String.format(
-					"insert into payroll details (employee_id,basic_pay,deductions,taxable_pay,tax,net_pay) values ('%s','%s','%s','%s','%s','%s')",
+					"insert into payroll_details (employee_id,basic_pay,deductions,taxable_pay,tax,net_pay) values ('%s','%s','%s','%s','%s','%s')",
 					employeeId, salary, deduction, taxablePay, tax, netPay);
 			int rowAffected = statement.executeUpdate(sql);
 			if (rowAffected == 1) {

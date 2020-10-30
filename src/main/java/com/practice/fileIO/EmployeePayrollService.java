@@ -66,7 +66,7 @@ public class EmployeePayrollService {
 		if (ioService.equals(IOService.FILE_IO)) {
 			return new EmployeePayrollFileIOService().countEntries();
 		}
-		return 0;
+		return this.employeePayRollList.size();
 	}
 
 	public List<EmployeePayRollData> readData(IOService ioService) {
@@ -81,9 +81,23 @@ public class EmployeePayrollService {
 		return null;
 	}
 
+	public void addEmployeesToPayroll(List<EmployeePayRollData> payrollList) {
+		payrollList.forEach(employeePayrollData -> {
+			System.out.println("Employee Being Added: " + employeePayrollData.getName());
+			this.addEmployeeToPayroll(employeePayrollData.getName(), employeePayrollData.getSalary(),
+					employeePayrollData.getStartDate(), employeePayrollData.getGender());
+			System.out.println("Employee Added: " + employeePayrollData.getName());
+		});
+		System.out.println(this.employeePayRollList);
+	}
+
+	public void addEmployeesToPayrollWithThreads(List<EmployeePayRollData> asList) {
+		
+	}
+
 	public List<EmployeePayRollData> getEmployeeListInStartDateRange(String date1, String date2, IOService ioService) {
 		if (ioService.equals(IOService.DB_IO)) {
-			return employeePayrollDB_IOService.getEmployeeListInRange(date1,date2);
+			return employeePayrollDB_IOService.getEmployeeListInRange(date1, date2);
 		}
 		return null;
 	}
@@ -112,13 +126,13 @@ public class EmployeePayrollService {
 	}
 
 	public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
-		if(ioService.equals(IOService.DB_IO))
+		if (ioService.equals(IOService.DB_IO))
 			return employeePayrollDB_IOService.getAverageSalaryByGender();
 		return null;
 	}
 
 	public void addEmployeeToPayroll(String name, double salary, LocalDate startDate, String gender) {
-		this.employeePayRollList.add(employeePayrollDB_IOService.addEmployeeToPayroll(name,salary,startDate,gender));
+		this.employeePayRollList.add(employeePayrollDB_IOService.addEmployeeToPayroll(name, salary, startDate, gender));
 	}
 
 }
