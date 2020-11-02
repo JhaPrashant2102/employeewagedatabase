@@ -237,6 +237,28 @@ public class EmployeePayRollServiceTest {
 		int statusCode = response.getStatusCode();
 		Assert.assertEquals(200,statusCode);
 	}
+	
+	@Test
+	public void givenEmployeeToDelete_WhenDeleted_shouldMatch200ResponseAndCount() {
+		///populate my memory
+		EmployeePayRollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+
+		//file
+		EmployeePayRollData employeePayRollData = employeePayrollService.getEmployeePayrollData("Sunder");
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type","application/json");
+		Response response = requestSpecification.delete("/employee_payroll/"+employeePayRollData.getId());
+		
+		//test wether deleted from file or not
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200,statusCode);
+		
+		//delete from memory
+		employeePayrollService.deleteEmployeePayroll(employeePayRollData.getName(),IOService.REST_IO);
+		long entries = employeePayrollService.countEntries(IOService.REST_IO);
+		Assert.assertEquals(4,entries);
+	}
 
 	
 }

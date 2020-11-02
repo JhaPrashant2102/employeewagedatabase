@@ -43,17 +43,6 @@
         "month": 11,
         "day": 2
       }
-    },
-    {
-      "id": 6,
-      "name": "Sunder",
-      "gender": "M",
-      "salary": 300000,
-      "startDate": {
-        "year": 2020,
-        "month": 11,
-        "day": 2
-      }
     }
   ]
 }
