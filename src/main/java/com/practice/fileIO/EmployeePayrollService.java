@@ -78,7 +78,7 @@ public class EmployeePayrollService {
 		if (ioService.equals(IOService.DB_IO)) {
 			return this.employeePayRollList.size();
 		}
-		if(ioService.equals(IOService.REST_IO)) {
+		if (ioService.equals(IOService.REST_IO)) {
 			return this.employeePayRollList.size();
 		}
 		return this.employeePayRollList.size();
@@ -104,6 +104,14 @@ public class EmployeePayrollService {
 			System.out.println("Employee Added: " + employeePayrollData.getName());
 		});
 		System.out.println(this.employeePayRollList);
+	}
+
+	public void addEmployeesToPayroll(EmployeePayRollData employeePayRollData, IOService ioService) {
+		if (ioService.equals(IOService.REST_IO)) {
+			this.addEmployeeToPayroll(employeePayRollData.getName(), employeePayRollData.getSalary(),
+					employeePayRollData.getStartDate(), employeePayRollData.getGender());
+		}
+		else employeePayRollList.add(employeePayRollData);
 	}
 
 	public void addEmployeesToPayrollWithThreads(List<EmployeePayRollData> payrollList) {

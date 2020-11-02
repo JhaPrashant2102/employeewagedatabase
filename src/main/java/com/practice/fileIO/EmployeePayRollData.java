@@ -6,9 +6,9 @@ import java.util.Objects;
 public class EmployeePayRollData {
 	private int id;
 	private String name;
+	private String gender;
 	private double salary;
 	private LocalDate startDate;
-	private String gender;
 
 	public EmployeePayRollData(int id, String name, double salary) {
 		this.id = id;
