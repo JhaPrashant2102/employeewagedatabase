@@ -10,10 +10,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
 import com.practice.fileIO.EmployeePayrollDB_IOService.StatementType;
 import com.practice.fileIO.EmployeePayrollService.IOService;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 
 public class EmployeePayRollServiceTest {
@@ -141,4 +147,37 @@ public class EmployeePayRollServiceTest {
 		System.out.println("Duration With Thread: "+Duration.between(threadStart, threadend));
 		assertEquals(13, employeePayrollService.countEntries(IOService.DB_IO));
 	}
+	
+	@Before
+	public void setup() {
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+	
+	//JsonServerRestAssured UC1
+	@Test
+	public
+	void givenEmployeeDataInJsonServer_whenRetrieved_shouldMatchTheCount() {
+		EmployeePayRollData[] arrayOfEmps =  getEmployeeList();
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		long entries = employeePayrollService.countEntries(IOService.REST_IO);
+		assertEquals(2,entries);
+		
+	}
+	
+	private EmployeePayRollData[] getEmployeeList() {
+		Response response = RestAssured.get("/employee_payroll");
+		EmployeePayRollData[] arrayOfEmps = new Gson().fromJson(response.asString(),EmployeePayRollData[].class);
+		return arrayOfEmps;
+	}
+	
+	//
+	public Response addEmployeeToJsonServer(EmployeePayRollData employeePayRollData) {
+		String empJson = new Gson().toJson(employeePayRollData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type","application/json");
+		request.body(empJson);
+		return request.post("/employee_payroll");
+	}
+
 }
