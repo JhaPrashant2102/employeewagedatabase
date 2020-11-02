@@ -106,10 +106,14 @@ public class EmployeePayrollService {
 		System.out.println(this.employeePayRollList);
 	}
 
-	public void addEmployeesToPayroll(EmployeePayRollData employeePayRollData, IOService ioService) {
-		if (ioService.equals(IOService.REST_IO)) {
+	public void addEmployeeToPayroll(EmployeePayRollData employeePayRollData, IOService ioService) {
+		if (ioService.equals(IOService.DB_IO)) {
 			this.addEmployeeToPayroll(employeePayRollData.getName(), employeePayRollData.getSalary(),
 					employeePayRollData.getStartDate(), employeePayRollData.getGender());
+		}
+		
+		else if (ioService.equals(IOService.REST_IO)) {
+			employeePayRollList.add(employeePayRollData);
 		}
 		else employeePayRollList.add(employeePayRollData);
 	}
