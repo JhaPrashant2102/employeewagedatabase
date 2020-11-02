@@ -111,11 +111,11 @@ public class EmployeePayrollService {
 			this.addEmployeeToPayroll(employeePayRollData.getName(), employeePayRollData.getSalary(),
 					employeePayRollData.getStartDate(), employeePayRollData.getGender());
 		}
-		
+
 		else if (ioService.equals(IOService.REST_IO)) {
 			employeePayRollList.add(employeePayRollData);
-		}
-		else employeePayRollList.add(employeePayRollData);
+		} else
+			employeePayRollList.add(employeePayRollData);
 	}
 
 	public void addEmployeesToPayrollWithThreads(List<EmployeePayRollData> payrollList) {
@@ -161,6 +161,18 @@ public class EmployeePayrollService {
 			employeePayRollData.setSalary(salary);
 	}
 
+	public void updateEmployeeSalary(String name, double salary, IOService ioService) {
+		if (ioService.equals(IOService.REST_IO)) {
+			EmployeePayRollData employeePayRollData = this.getEmployeePayRollData(name);
+			if (employeePayRollData != null)
+				employeePayRollData.setSalary(salary);
+		} else {
+			EmployeePayRollData employeePayRollData = this.getEmployeePayRollData(name);
+			if (employeePayRollData != null)
+				employeePayRollData.setSalary(salary);
+		}
+	}
+
 	private EmployeePayRollData getEmployeePayRollData(String name) {
 		EmployeePayRollData employeePayRollData;
 		employeePayRollData = this.employeePayRollList.stream()
@@ -182,6 +194,12 @@ public class EmployeePayrollService {
 
 	public void addEmployeeToPayroll(String name, double salary, LocalDate startDate, String gender) {
 		this.employeePayRollList.add(employeePayrollDB_IOService.addEmployeeToPayroll(name, salary, startDate, gender));
+	}
+
+	public EmployeePayRollData getEmployeePayrollData(String name) {
+		return this.employeePayRollList.stream()
+				.filter(employeePayrollDataItem -> employeePayrollDataItem.getName().equals(name)).findFirst()
+				.orElse(null);
 	}
 
 }

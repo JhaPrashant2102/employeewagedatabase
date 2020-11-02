@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -194,26 +195,48 @@ public class EmployeePayRollServiceTest {
 
 	// JsonServerRestAssured UC2
 	@Test
-		public void givenMultipleEmployeeWhenAdded_shouldMatch201ResponseAndCount() {
-			EmployeePayRollData[] arrayOfEmps = getEmployeeList();
-			EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
-	
-			EmployeePayRollData[] arrayOfEmps1 = {
-				new EmployeePayRollData(0, "Sunder", "M", 60000.0, LocalDate.now()),
+	public void givenMultipleEmployeeWhenAdded_shouldMatch201ResponseAndCount() {
+		EmployeePayRollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+
+		EmployeePayRollData[] arrayOfEmps1 = { new EmployeePayRollData(0, "Sunder", "M", 60000.0, LocalDate.now()),
 				new EmployeePayRollData(0, "Mukesh", "M", 100000.0, LocalDate.now()),
-				new EmployeePayRollData(0, "Anil", "M", 200000.0, LocalDate.now()),
-			};
-			
-			for(EmployeePayRollData employeePayRollData: arrayOfEmps1) {
-				Response response = addEmployeeToJsonServer(employeePayRollData);
-				int statusCode = response.getStatusCode();
-				assertEquals(201, statusCode);
-				employeePayRollData = new Gson().fromJson(response.asString(),EmployeePayRollData.class);
-				employeePayrollService.addEmployeeToPayroll(employeePayRollData,IOService.REST_IO);
-			}
-			
-			long entries = employeePayrollService.countEntries(IOService.REST_IO);
-			assertEquals(6,entries);
+				new EmployeePayRollData(0, "Anil", "M", 200000.0, LocalDate.now()), };
+
+		for (EmployeePayRollData employeePayRollData : arrayOfEmps1) {
+			Response response = addEmployeeToJsonServer(employeePayRollData);
+			int statusCode = response.getStatusCode();
+			assertEquals(201, statusCode);
+			employeePayRollData = new Gson().fromJson(response.asString(), EmployeePayRollData.class);
+			employeePayrollService.addEmployeeToPayroll(employeePayRollData, IOService.REST_IO);
 		}
 
+		long entries = employeePayrollService.countEntries(IOService.REST_IO);
+		assertEquals(6, entries);
+	}
+
+	// JsonServerRestAssured UC3
+	@Test
+	public void givenNewSalaryForEmployeeWhenUpdated_shouldMatch200Response() {
+		///populate my memory
+		EmployeePayRollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+
+		//memory
+		employeePayrollService.updateEmployeeSalary("Sunder", 300000.00, IOService.REST_IO);
+		EmployeePayRollData employeePayRollData = employeePayrollService.getEmployeePayrollData("Sunder");
+		
+		//file
+		String empJson = new Gson().toJson(employeePayRollData);
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type","application/json");
+		requestSpecification.body(empJson);
+		Response response = requestSpecification.put("/employee_payroll/"+employeePayRollData.getId());
+		
+		//test changes are made at both places or not
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200,statusCode);
+	}
+
+	
 }
